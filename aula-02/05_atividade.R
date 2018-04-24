@@ -31,7 +31,7 @@ length(acessos_alunos)
 ## Dica 2: Vimos exemplos disto nos materiais dos tipos numéricos e das estruturas de dados.
 ### # ###
 aluno <- "alu201830122"
-paste("O aluno " + acessos_alunos[aluno] + " realizou " + N + " acessos.")
+paste("O aluno", aluno, "realizou", acessos_alunos$alu201830122, "acessos.")
 
 
 ### 4 ###
@@ -45,6 +45,7 @@ acessos <- unlist(acessos_alunos)
 ## 3. Determine o tamanho do vetor da operação 2, imprimindo o resultado na Console
 ### # ###
 
+alunos_maiores <- which(acessos > acessos_alunos$alu201830122)
 
 
 ### 5 ###
