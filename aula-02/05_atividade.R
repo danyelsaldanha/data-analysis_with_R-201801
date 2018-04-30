@@ -44,14 +44,15 @@ acessos <- unlist(acessos_alunos)
 ## 2. Com uma operação de indexação, crie um outro vetor contendo somente os valores maiores
 ## 3. Determine o tamanho do vetor da operação 2, imprimindo o resultado na Console
 ### # ###
-
-alunos_maiores <- which(acessos > acessos_alunos$alu201830122)
+maiores <- acessos > acessos["alu201830122"]
+alunos_maiores <- which(maiores)
+paste("Quantidade de alunos com mais acessos que eu:",length(alunos_maiores))
 
 
 ### 5 ###
 ## Combine todas as etapas acima em uma única chamada, sem a criação dos vetores auxiliares
 ### # ###
-
+paste("Quantidade de alunos com mais acessos que eu:",length(which(acessos > acessos["alu201830122"])))
 
 
 ### 6 ###
@@ -60,7 +61,7 @@ alunos_maiores <- which(acessos > acessos_alunos$alu201830122)
 
 ## Dica: Lembre que falamos sobre como o R faz conversões implícitas entre o tipo lógico e tipos numéricos
 ### # ###
-
+paste("Quantidade de alunos com menos acessos que eu:",sum(acessos < acessos["alu201830122"]))
 
 
 ### 7 ###
@@ -73,7 +74,7 @@ alunos_maiores <- which(acessos > acessos_alunos$alu201830122)
 ## Dica: Pode ser mais fácil se iniciar o vetor notas como uma cópia do vetor acessos, modificando os valores conforme as regras
 ## OBSERVAÇÃO :: Não avaliarei participação na forma do enunciado deste exercício. 
 ### # ###
-
+notas <- ifelse(acessos == 0, NA, ifelse(acessos < 10, 1, 2))
 
 
 ### 8 ###
@@ -91,20 +92,33 @@ acessos_alunos_e_guest$guest <- NA
 
 ## Repita as atividades 4, 5, 6, e 7 utilizando o acessos_com_guest no lugar da lista acessos_alunos.
 ## Tome o devido cuidado de sempre criar variáveis com nomes diferentes das já utilizadas! 
-
-
+acessos_guest <- unlist(acessos_alunos_e_guest)
+maiores_guest <- acessos_guest > acessos_guest["alu201830122"]
+alunos_maiores_guest <- which(maiores_guest)
+paste("Quantidade de alunos com mais acessos que eu:",length(alunos_maiores_guest))
+paste("Quantidade de alunos com menos acessos que eu:",sum(acessos_guest < acessos_guest["alu201830122"]))
+notas_guest <- ifelse(acessos_guest == 0, NA, ifelse(acessos_guest < 10, 1, 2))
+#table(notas_guest)
 
 ### 10 ###
 ## Responda as seguintes perguntas:
 
 
 # 1. Houve modificação no número de alunos com mais e com menos acessos que você?
+#Como meu número de acessos é ZERO, não houve modificação na contagem com mais ou menos acessos. Porém, pelo fato de a contagem com menos utilizar a função SUM, a soma foi invalidada pela presença do novo valor NA.
 
 # 2. Como você conclui que o R trata comparações (operações relacionais) entre valores numéricos e NA?
+#Quando possuímos um valor NA, o comportamento em uma comparação no R é o mesmo que uma comparação com NULO no SQL, anulando todos os demais valores numéricos caso o NA não seja tratado especificamente.
 
 # 3. Qual o resultado do uso da função sum na presença de NA? O que você conclui sobre a operação de soma de todos os valores de
 #    um vetor na presença de NA?
+#O resultado é que a soma acaba sendo anulada, caso o NA não seja tratado separadamente antes da somatória.
 
 # 4. Execute o comando abaixo para ler a documentação da função sum e veja se há como modificar a chamada da função sum na presença
 #    de NAs. Teste os exemplos da página de help da função sum.
 help(sum)
+
+sum(1:5)
+sum(1:5, NA)
+sum(1:5, NA, na.rm = TRUE)
+sum(acessos_guest < acessos_guest["alu201830122"], na.rm = TRUE)
