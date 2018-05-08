@@ -9,8 +9,8 @@ salarios <- read_csv("aula-03/data/201802_dados_salarios_servidores.csv.gz")
 ## 
 ## O arquivo possui 2 colunas de Remuneração, uma em Reais e outra em Dólares. 
 ## Crie uma nova coluna de Remuneração Final que terá a soma entre a remuneração em Reais e as remuneração em Dólares convertida para Reais.
-## Atenção: Para conversão, utilize a Cotação Comercial do Dólar no último dia útil de Fevereiro.
-## Após criar esta coluna, descarte todos os registros cuja Remuneração Final for menor que R$ 900,00
+## Atenção: Para conversão, utilize a Cotação Comercial do Dólar no último dia útil de Fevereiro. (3,2421)
+## Após criar esta coluna,, descarte todos os registros cuja Remuneração Final for menor que R$ 900,00
 ## 
 ### # ####
 
