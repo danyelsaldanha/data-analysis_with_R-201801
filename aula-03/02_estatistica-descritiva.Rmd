@@ -23,6 +23,11 @@ Na próxima aula continuaremos com mais algumas medidas de tendência central e 
 
 Dados de remuneração de servidores públicos federais no mês de Fevereiro de 2018, obtidos do Portal da Transparência e pós-processados para uso nesta aula. 
 
+```{r "LocaleEncoding", message=FALSE, warning=FALSE, echo=FALSE}
+Sys.setlocale("LC_ALL", "pt_BR")
+options(encoding = "UTF-8")
+```
+
 ```{r "Dataset", message=FALSE, warning=FALSE}
 library(tidyverse)
 
