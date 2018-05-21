@@ -7,7 +7,14 @@ library(lubridate)
 
 ### IMPORTANTE ###
 ## Se você utilizar alguma função própria ou do material de aula, o código da(s) função(ões) deve estar neste arquivo da atividade.
+salarios <- read_csv("aula-03/data/201802_dados_salarios_servidores.csv.gz")
 
+salarios %>%
+  mutate(REMUNERACAO_FINAL = REMUNERACAO_REAIS + round((REMUNERACAO_DOLARES * 3.2421), digits = 2)) %>%
+  filter(REMUNERACAO_FINAL >= 900) -> salarios
+
+salarios %>%
+  View()
 
 ### 1 ####
 ## 
@@ -19,6 +26,9 @@ library(lubridate)
 ## - O resultado desta atividade deve ser um Data Frame com as variáveis de Cargo, Coeficiente de Correlação, Direção da Correlação e Força da Correlação
 ## 
 ### # ####
+salarios %>%
+  count(QTD = DESCRICAO_CARGO) %>%
+  filter(QTD >= 200) 
 
 ### 2 ###
 ##

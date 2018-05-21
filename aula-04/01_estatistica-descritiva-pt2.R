@@ -162,7 +162,11 @@ IQR(subset_salarios$REMUNERACAO_REAIS)
 #' __Atividade I__
 #' 
 #' Qual a razão entre o IQR e o Desvio Absoluto da Mediana da variável REMUNERACAO_REAIS?
+#'
+#' "Para uma distribuição simétrica, em que a mediana é igual ao midhinge (média entre o primeiro quartil e o terceiro quartil), metade do intervalo interquartil é igual ao desvio absoluto médio (DAM)."
 #' 
+#' Aqui a razão foi próxima da afirmação acima, em aproximadamente 2,12 - a distribuição não é muito assimétrica.
+#'   
 ## ------------------------------------------------------------------------
 print("Atividade")
 
@@ -173,6 +177,27 @@ print("Atividade")
 #' 
 #' Crie uma função para calcular o Desvio Absoluto da Mediana. 
 #' Calcule o Desvio Padrão, o Desvio Absoluto da Mediana e o IQR do tempo de ingresso __em anos__ (obtido da variável DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO).
+#'
+
+summary(year(Sys.Date()) - year(subset_salarios$DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO))
+
+dam <- function(arg1){
+  return(median(abs(arg1 - median(arg1))))
+}
+
+subset_salarios %>%
+  mutate(anosIngresso = year(Sys.Date()) - year(DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO)) %>%
+  summarize(
+    menor = min(anosIngresso),
+    maior = max(anosIngresso),
+    media = mean(anosIngresso),
+    desvioPadrao = sd(anosIngresso),
+    mediana = median(anosIngresso),
+    desvioAbsolutoMediana = dam(anosIngresso),
+    intervaloInterquartil = IQR(anosIngresso)
+  ) %>%
+  View()
+
 #' 
 ## ------------------------------------------------------------------------
 print("Atividade")
@@ -238,6 +263,12 @@ cor(x = subset_salarios$REMUNERACAO_REAIS, y = 2018 - year( subset_salarios$DATA
 print("Atividade")
 
 ## Código aqui
+
+cov(year(subset_salarios$DATA_INGRESSO_ORGAO),
+    year(subset_salarios$DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO)) -> covAnoIngressoDiploma
+
+cor(year(subset_salarios$DATA_INGRESSO_ORGAO),
+    year(subset_salarios$DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO)) -> corAnoIngressoDiploma
 
 #' 
 #' >> FIM ATIVIDADE
