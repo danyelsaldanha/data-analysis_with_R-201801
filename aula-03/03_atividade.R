@@ -10,10 +10,15 @@ salarios <- read_csv("aula-03/data/201802_dados_salarios_servidores.csv.gz")
 ## O arquivo possui 2 colunas de Remuneração, uma em Reais e outra em Dólares. 
 ## Crie uma nova coluna de Remuneração Final que terá a soma entre a remuneração em Reais e as remuneração em Dólares convertida para Reais.
 ## Atenção: Para conversão, utilize a Cotação Comercial do Dólar no último dia útil de Fevereiro. (3,2421)
-## Após criar esta coluna,, descarte todos os registros cuja Remuneração Final for menor que R$ 900,00
+## Após criar esta coluna, descarte todos os registros cuja Remuneração Final for menor que R$ 900,00
 ## 
 ### # ####
+salarios %>%
+  mutate(REMUNERACAO_FINAL = REMUNERACAO_REAIS + round((REMUNERACAO_DOLARES * 3.2421), digits = 2)) %>%
+  filter(REMUNERACAO_FINAL >= 900) -> salarios
 
+salarios %>%
+  View()
 
 ### 2 ####
 ## 
@@ -25,7 +30,14 @@ salarios <- read_csv("aula-03/data/201802_dados_salarios_servidores.csv.gz")
 salarios %>% count(UF_EXERCICIO) %>% pull(UF_EXERCICIO) -> ufs # EXEMPLO
 ## 
 ### # ####
+salarios %>%
+  filter(ORGSUP_LOTACAO != ORGSUP_EXERCICIO) %>%
+  count(DESCRICAO_CARGO) %>%
+  arrange(desc(n)) %>%
+  head(5) %>%
+  pull(DESCRICAO_CARGO) -> cargos_diferente_lotacao
 
+  
 
 ### 3 ####
 ## 
@@ -48,4 +60,15 @@ salarios %>% filter(DESCRICAO_CARGO %in% c("MINISTRO DE PRIMEIRA CLASSE", "ANALI
 ## A função group_by permite múltiplos nomes de variáveis na mesma chamada.
 ## 
 ### # ####
-
+salarios %>%
+  filter(DESCRICAO_CARGO %in% cargos_diferente_lotacao) %>%
+  group_by(DESCRICAO_CARGO, MESMO_ORGAO = ORGSUP_LOTACAO == ORGSUP_EXERCICIO) %>%
+  summarise(MEDIA_SALARIAL = mean(REMUNERACAO_FINAL),
+            DESVIO_PADRAO = sd(REMUNERACAO_FINAL),
+            MEDIANA = median(REMUNERACAO_FINAL),
+            DESVIO_ABSOLUTO = median(abs(REMUNERACAO_FINAL - median(REMUNERACAO_FINAL))),
+            MENOR_SALARIO = min(REMUNERACAO_FINAL),
+            MAIOR_SALARIO = max(REMUNERACAO_FINAL)) %>%
+  View()
+## Para os casos em que a lotação está em um mesmo cargo, o desvio absoluto da mediana do salário é maior
+## em comparação aos que estão lotados em cargos diferentes.
