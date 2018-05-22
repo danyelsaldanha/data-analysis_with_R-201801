@@ -76,7 +76,7 @@ summary(ted)
 
 # Verifique os 10 registros com maior duração.
 
-
+ 
 
 
 # Existem apresentações com duração maior que 3 desvios padrão acima da média? Liste elas
