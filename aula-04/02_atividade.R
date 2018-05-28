@@ -27,8 +27,24 @@ salarios %>%
 ## 
 ### # ####
 salarios %>%
-  count(QTD = DESCRICAO_CARGO) %>%
-  filter(QTD >= 200) 
+  group_by(DESCRICAO_CARGO) %>%
+  summarise(
+    QTD = n(),
+    CORRELACAO_COEFICIENTE = cor(x = year(DATA_INGRESSO_ORGAO), y = year(DATA_DIPLOMA_INGRESSO_SERVICOPUBLICO )),
+    CORRELACAO_DIRECAO = if_else(sign(CORRELACAO_COEFICIENTE) == 1, 'POSITIVA', 'NEGATIVA'),
+    CORRELACAO_FORCA = case_when(
+      abs(CORRELACAO_COEFICIENTE) >= 0.0 & abs(CORRELACAO_COEFICIENTE) < 0.3 ~ 'DESPREZIVEL',
+      abs(CORRELACAO_COEFICIENTE) >= 0.3 & abs(CORRELACAO_COEFICIENTE) < 0.5 ~ 'FRACA',
+      abs(CORRELACAO_COEFICIENTE) >= 0.5 & abs(CORRELACAO_COEFICIENTE) < 0.7 ~ 'MODERADA',
+      abs(CORRELACAO_COEFICIENTE) >= 0.7 & abs(CORRELACAO_COEFICIENTE) < 0.9 ~ 'FORTE',
+      abs(CORRELACAO_COEFICIENTE) >= 0.9 ~ 'MUITO FORTE')
+  ) %>%
+  filter(QTD >= 200) %>%
+  ungroup() %>%
+  select(-QTD) -> salarios_correlacao
+
+salarios_correlacao %>%
+  View()
 
 ### 2 ###
 ##
@@ -39,4 +55,44 @@ salarios %>%
 ##   (caso haja diferença)
 ##
 ### # ###
+rbind(
+  salarios_correlacao %>%
+    arrange(abs(CORRELACAO_COEFICIENTE)) %>%
+    head(n = 10),
+  salarios_correlacao %>%
+    arrange(abs(CORRELACAO_COEFICIENTE)) %>%
+    tail(n = 10)
+) %>%
+pull(DESCRICAO_CARGO) -> cargos_20
 
+merge(
+  merge(
+    salarios %>%
+      filter(DESCRICAO_CARGO %in% cargos_20) %>%
+      group_by(DESCRICAO_CARGO, ORGSUP_LOTACAO) %>%
+      summarise(
+        MODA_LOTACAO = n()
+      ) %>%
+      mutate(QTD_MAX = max(MODA_LOTACAO)) %>%
+      ungroup() %>%
+      filter(QTD_MAX == MODA_LOTACAO) %>%
+      select(-QTD_MAX),
+    salarios %>%
+      filter(DESCRICAO_CARGO %in% cargos_20) %>%
+      group_by(DESCRICAO_CARGO, ORGSUP_EXERCICIO) %>%
+      summarise(
+        MODA_EXERCICIO = n()
+      ) %>%
+      mutate(QTD_MAX = max(MODA_EXERCICIO)) %>%
+      ungroup() %>%
+      filter(QTD_MAX == MODA_EXERCICIO) %>%
+      select(-QTD_MAX),
+    by = "DESCRICAO_CARGO"
+  ),
+  salarios_correlacao,
+  by = "DESCRICAO_CARGO"
+) %>%
+View()
+
+# Para a maioria dos casos em que a força da correlação é forte, a moda dos órgãos se mantém a mesma, tanto para lotação quanto para exercício.
+# Enquanto que para a maioria dos casos em que a força da correlação é desprezível, a moda dos órgãos tende a ser diferente de lotação para exercício.
