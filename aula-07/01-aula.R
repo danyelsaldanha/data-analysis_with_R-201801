@@ -261,7 +261,24 @@ pgeom(6, prob=0.1, lower.tail = TRUE)
 #' 
 #' >> ATIVIDADE EM AULA
 #' 
-#' 1. Faça o gráfico da distribuição de probabilidades de chamadas telefônicas até 20 ligações e simule 500 eventos de Bernoulli para esta mesma probabilidade. Nesta simulação, identifique quantas sequências de 6 falhas ocorreram. Use como _seed_ os últimos 5 dígitos da sua matrícula. Veja no exemplo anterior o uso da função `rle`.
+#' 1. Faça o gráfico da distribuição de probabilidades de chamadas telefônicas até 20 ligações e
+#' simule 500 eventos de Bernoulli para esta mesma probabilidade. Nesta simulação, identifique
+#' quantas sequências de 6 falhas ocorreram. Use como _seed_ os últimos 5 dígitos da sua matrícula.
+#' Veja no exemplo anterior o uso da função `rle`.
+df_geom_probs <- data_frame(x = 0:20, y=pgeom(0:20, prob = 0.1) * 100)
+
+ggplot(df_geom_probs, aes(x=x, y=y)) +
+  geom_col() +
+  scale_x_continuous(name = "Ligações até ser atendido", breaks=0:20) +
+  scale_y_continuous(name = "Prob (%)", breaks=seq(from=0, to=100, by=10)) +
+  theme_light()
+
+set.seed(30122)
+chamadas_telefonicas <- rbernoulli(500)
+seq_falhas <- rle(chamadas_telefonicas)
+seq_falhas$lengths[!seq_falhas$values]
+
+
 #' 
 #' 2. Você criou um sistema para reclamações da demora do atendimento de ligações telefônicas durante quedas de conectividade da Internet, e exige que os usuários acertem um CAPTCHA antes de postarem uma reclamação. Você observou que a probabilidade de um usuário acertar o CAPTCHA exibido no seu sistema é de 70%. 
 #' 
