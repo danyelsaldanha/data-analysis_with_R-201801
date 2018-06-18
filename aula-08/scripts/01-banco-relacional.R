@@ -2,7 +2,7 @@
 # install.packages("RSQLite")
 
 # Banco de Dados Relacional e Colunar de propósito analítico, embutido
-# install.packages("MonetDBLite")
+install.packages("MonetDBLite")
 
 # Biblioteca para objetos JSON
 # install.packages("jsonlite")
@@ -23,7 +23,13 @@ ted_main <- ted_talks %>%
 ted_ratings <- ted_talks %>%
   select( url, ratings ) %>%
   mutate( ratings = map( ratings, ~ jsonlite::fromJSON( str_replace_all( .x, "'", '"' )))) %>%
-  unnest( ratings ) %>%
+  unnest( ratings )
+
+ted_ratings %>%
+  select(id, name) %>%
+  distinct()
+
+ted_ratings <- ted_ratings %>%
   select( -id ) %>%
   rename( category = name ) %>%
   filter( count > 0 ) %>%
@@ -41,6 +47,12 @@ my_db <- MonetDBLite::src_monetdblite(dbdir)
 
 # Cria tabela temporária com ted_ratings
 tb_ted_ratings <- copy_to(my_db, df = ted_ratings, name = "ted_ratings_tmp", overwrite = TRUE, temporary = TRUE)
+
+ted_ratings %>%
+  summary()
+
+tb_ted_ratings %>%
+  summary()
 
 # Cria tabela temporária com ted_main
 tb_ted_main <- copy_to(my_db, df = ted_main, name = "ted_main_tmp", overwrite = TRUE, temporary = TRUE)
