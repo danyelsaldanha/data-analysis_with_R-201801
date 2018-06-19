@@ -9,9 +9,28 @@ products <- read_csv("project/products.csv")                         # Cadastro 
 insta_orders <- read_csv( "project/orders_instacart.csv" )           # Amostra de pedidos de usuários
 insta_products <- read_csv( "project/order_products_instacart.csv" ) # Produtos que compõe os pedidos
 
+#Inner join: merge(df1, df2, by = "CustomerId")
+#Outer join: merge(x = df1, y = df2, by = "CustomerId", all = TRUE)
+#Left outer: merge(x = df1, y = df2, by = "CustomerId", all.x = TRUE)
+#Right outer: merge(x = df1, y = df2, by = "CustomerId", all.y = TRUE)
+#Cross join: merge(x = df1, y = df2, by = NULL)
+departments %>%
+    View()
+
+aisles %>%
+    View()
+
+products %>%
+    View()
+
+insta_orders %>%
+    View()
+
+insta_products %>%
+    View()
 
 #1 # Quantos dos produtos do cadastro nunca foram comprados?
-
+length(setdiff(products$product_id, insta_products$product_id))
 
 #2 # Crie um dataframe com os dados combinados de produtos, corredores e departamentos. 
 
